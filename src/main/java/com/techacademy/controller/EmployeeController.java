@@ -107,41 +107,38 @@ public class EmployeeController {
 
     }
 
+    // 従業員更新処理
     @PostMapping(value = "/{code}/update")
     public String update(@PathVariable String code, @Validated Employee employee, BindingResult res, Model model) {
 
         System.out.println("000");
-        // パスワードが空ではない場合
-        if (!"".equals(employee.getPassword())) {
-            System.out.println("111");
 
-            // 入力チェック
-            if (res.hasErrors()) {
-                System.out.println("222");
-                return "employees/edit";
-
-            }
-            try {
-                System.out.println("333");
-
-                ErrorKinds result = employeeService.update(employee);
-                if (ErrorMessage.contains(result)) {
-                    System.out.println("444");
-                    model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-                    System.out.println(ErrorMessage.getErrorName(result));
-                    System.out.println(ErrorMessage.getErrorValue(result));
-                    return "employees/edit";
-                }
-            } catch (DataIntegrityViolationException e) {
-                System.out.println("555");
-
-                model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
-                        ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
-                //return edit(employee.getCode(), model);
-                return "employees/edit";
-            }
-
+        // 入力チェック
+        if (res.hasErrors()) {
+            System.out.println("222");
+            return "employees/edit";
         }
+
+        try {
+            System.out.println("333");
+
+            ErrorKinds result = employeeService.update(employee);
+            if (ErrorMessage.contains(result)) {
+                System.out.println("444");
+                model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+                System.out.println(ErrorMessage.getErrorName(result));
+                System.out.println(ErrorMessage.getErrorValue(result));
+                return "employees/edit";
+            }
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("555");
+
+            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
+                    ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
+            // return edit(employee.getCode(), model);
+            return "employees/edit";
+        }
+
         System.out.println("666");
         return "redirect:/employees";
 

@@ -56,16 +56,19 @@ public class EmployeeService {
     @Transactional
     public ErrorKinds update(Employee employee) {
 
-        // パスワードチェック
-        ErrorKinds result = employeePasswordCheck(employee);
-        if (ErrorKinds.CHECK_OK != result) {
-            return result;
+        // パスワードが「空ではない」場合
+        if (!"".equals(employee.getPassword())) {
+            // パスワードチェック
+            ErrorKinds result = employeePasswordCheck(employee);
+            if (ErrorKinds.CHECK_OK != result) {
+                return result;
+            }
         }
 
         // 従業員番号重複チェック
-        //if (findByCode(employee.getCode()) == null) {
-        //    return ErrorKinds.DUPLICATE_ERROR;
-        //}
+        // if (findByCode(employee.getCode()) == null) {
+        // return ErrorKinds.DUPLICATE_ERROR;
+        // }
 
         employee.setDeleteFlg(false);
 
